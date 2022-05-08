@@ -5,6 +5,7 @@ import { useNavigate, Routes, Route, Outlet } from 'react-router-dom';
 import { ReportView } from './views/reports'
 import { DatasourceView } from './views/datasources'
 import { Dashboard } from './views/dashboard'
+
 export const App = () => {
 
     const navigate = useNavigate();
