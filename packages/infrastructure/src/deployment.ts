@@ -26,7 +26,7 @@ export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output
                         imagePullPolicy: "Always",
                         name: appName,
                         image: `thetechcompany/hivereport-backend:${imageTag}`,
-                        ports: [{ name: "http", containerPort: 9010 }],
+                        ports: [{ name: "http", containerPort: 9014 }],
                         volumeMounts: [
                         ],
                         env: [
