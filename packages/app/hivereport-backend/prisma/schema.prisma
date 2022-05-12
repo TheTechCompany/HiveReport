@@ -10,12 +10,48 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model ReportDashboard {
+  id String @id
+
+  name String
+
+  description String?
+
+  reports ReportDashboardItem[] @relation(name: "hasItem")
+
+  createdAt DateTime @default(now())
+  createdBy String
+
+  organisation String
+}
+
+model ReportDashboardItem{
+  id String @id
+
+  x Float
+  y Float
+  width Float
+  height Float
+
+  report Report @relation(name: "displaysReport", fields: [reportId], references: [id])
+  reportId String
+
+  dashboard ReportDashboard @relation(name: "hasItem", fields: [dashboardId], references: [id])
+  dashboardId String
+}
+
 model Report {
   id String @id
 
   name String
 
+  type String
+
+  displayedBy ReportDashboardItem[] @relation(name: "displaysReport")
+
   createdAt DateTime @default(now())
+
+  createdBy String
 
   organisation String
 }

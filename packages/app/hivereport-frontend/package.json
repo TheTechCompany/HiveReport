@@ -50,13 +50,16 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
+    "@apollo/client": "^3.6.2",
     "@hexhive/styles": "^0.0.6-alpha.13",
-    "@hexhive/ui": "^0.0.11",
+    "@hexhive/ui": "^0.0.12-alpha.13",
+    "@mui/lab": "^5.0.0-alpha.81",
     "@types/jest": "^27.0.1",
     "@types/react": "^17.0.19",
     "@types/react-dom": "^17.0.9",
     "@types/systemjs": "^6.1.1",
     "@types/webpack-env": "^1.16.2",
+    "graphql": "^16.5.0",
     "grommet": "^2.23.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

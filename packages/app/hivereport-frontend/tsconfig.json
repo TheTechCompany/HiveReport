@@ -3,7 +3,8 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "declarationDir": "dist",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "downlevelIteration": true
   },
   "files": ["src/hivereport-app-frontend.tsx"],
   "include": ["src/**/*"],
