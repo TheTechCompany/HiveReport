@@ -101,7 +101,7 @@ export const App = () => {
                         <Route path={""} element={<Dashboard />} />
                         <Route path={'reports'} element={<Outlet />}>
                             <Route path={''} element={<ReportListView />} />
-                            <Route path={':id'} element={<ReportSingleView />} />
+                            <Route path={':id/*'} element={<ReportSingleView />} />
                         </Route>
                         <Route path={'data'} element={<Outlet />}>
                             <Route path={''} element={<DatasourceView />} />
