@@ -23,6 +23,7 @@ const app = express();
         }
     })
 
+    
     await hiveGraph.init()
 
     app.use(hiveGraph.middleware)
