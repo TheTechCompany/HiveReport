@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - staging
+      - master
     paths: ["packages/app/**", "packages/infrastructure/**"]
 
 concurrency: hivereport-infra-${{ github.ref }}
