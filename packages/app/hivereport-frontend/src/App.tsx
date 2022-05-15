@@ -28,7 +28,6 @@ export const App = () => {
         }
     ]
 
-
     const { data } = useQuery(gql`
         query GetGatewayInfo {
             
