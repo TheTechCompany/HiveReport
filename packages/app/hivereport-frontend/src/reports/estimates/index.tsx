@@ -128,12 +128,13 @@ export const EstimateReport = () => {
         const weeks = quotes?.filter((a: { status: string; }) => {
             if(filter.length > 0) return filter.indexOf(a.status) > -1
             return true;
-        }).reduce((previous: { [x: string]: { [x: string]: any; }; }, current: { start: { getTime: () => any; }; price: any; status: string | number; }) => {
-            let start = (new Date() || current.start).getTime();
-            console.log(current)
+        }).reduce((previous: { [x: string]: { [x: string]: any; }; }, current: { date: { getTime: () => any; }; price: any; status: string | number; }) => {
+            let start = (current.date).getTime();
+
             if (!previous[start]) previous[start] = {
                 value: 0
             };
+            
             previous[start].value += current.price
 
             if(!previous[start][current.status]) previous[start][current.status] = 0;
