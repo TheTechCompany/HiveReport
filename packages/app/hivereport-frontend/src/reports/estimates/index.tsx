@@ -29,16 +29,23 @@ export const EstimateReport = () => {
 
     const [ timeline, setTimeline ] = useState([]);
 
+    const [horizon, setHorizon] = useState<{ start: Date, end: Date } | undefined>()
+
     const { data } = useQuery(gql`
-        query GetEstimates {
-            estimates {
+        query GetEstimates($start: DateTime, $end: DateTime) {
+            estimates (where: {date_GTE: $start, date_LTE: $end}) {
                 id
                 status
                 price
                 date
             }
         }
-    `)
+    `, {
+        variables: {
+            start: horizon?.start,
+            end: horizon?.end
+        }
+    })
 
     const quotes = data?.estimates || [];
 
@@ -125,16 +132,24 @@ export const EstimateReport = () => {
         let _weeks: any = {};
 
         console.log({quotes: quotes.filter((a) => true)})
-        const weeks = quotes?.filter((a: { status: string; }) => {
+        const weeks = quotes?.filter((a: { date: Date, status: string; }) => {
+            if(!a.date) return false; //a.date != null;
             if(filter.length > 0) return filter.indexOf(a.status) > -1
             return true;
-        }).reduce((previous: { [x: string]: { [x: string]: any; }; }, current: { date: { getTime: () => any; }; price: any; status: string | number; }) => {
-            let start = (current.date).getTime();
+        }).reduce((previous: { [x: string]: { [x: string]: any; }; }, current: { date: string; price: any; status: string | number; }) => {
+            let date = new Date(current.date);
+            let start = moment(date).format('W/yyyy');
+
+            // date.setHours(0);
+            // date.setMinutes(0);
+            // date.setSeconds(0);
+
+            // let start = new Date(current.date)?.getTime();
 
             if (!previous[start]) previous[start] = {
                 value: 0
             };
-            
+
             previous[start].value += current.price
 
             if(!previous[start][current.status]) previous[start][current.status] = 0;
@@ -147,13 +162,16 @@ export const EstimateReport = () => {
 
         setTimeline(Object.keys(weeks).sort((a, b) => a == b ? 0 : a > b ? -1 : 1).map((start, ix) => {
             let value = weeks[start].value;
+
+            let date = new Date(moment(start, 'W/yyyy').toDate());
+
             delete weeks[start].value;
             return {
                 id: `${start}`,
-                name: `Week ${moment(new Date(parseInt(start))).format("W/yyyy")}`,
-                color: getWonLost(value, weeks[start], stringToColor(moment(new Date(parseInt(start))).format("DD/mm/yyyy"))),
-                start: new Date(parseInt(start)),
-                end: new Date(moment(new Date(parseInt(start))).add(7, 'days').valueOf()),
+                name: `Week ${moment(date).format("W/yyyy")}`,
+                color: getWonLost(value, weeks[start], stringToColor(moment(date).format("DD/mm/yyyy"))),
+                start: date,
+                end: new Date(moment(date).add(7, 'days').valueOf()),
                 showLabel: formatter.format(value),
                 hoverInfo: (
                     <Box sx={{display: 'flex', flexDirection: "column"}}>
@@ -192,6 +210,7 @@ export const EstimateReport = () => {
     return (
         <Paper sx={{flex: 1, display: 'flex'}}>
             <Timeline
+                onHorizonChange={(start, end) => setHorizon({start, end})}
                 data={timeline || []}
                 />
         </Paper>
