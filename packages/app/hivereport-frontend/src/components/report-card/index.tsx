@@ -9,5 +9,7 @@ export interface ReportCardProps {
 
 export const ReportCard : React.FC<ReportCardProps> = (props) => {
     const Element = REPORT_TYPES?.find((a) => a.value == props.type)?.component || Box
-    return <Element />
+    return <Box >
+        WIidth
+    </Box>
 }

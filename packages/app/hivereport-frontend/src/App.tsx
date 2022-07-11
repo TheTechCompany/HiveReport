@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Box } from 'grommet';
+import { Box } from '@mui/material';
 import { Sidebar } from '@hexhive/ui';
 import { useNavigate, Routes, Route, Outlet } from 'react-router-dom';
 import { ReportListView } from './views/reports/list'
@@ -8,6 +8,7 @@ import { Dashboard } from './views/dashboard'
 import { ReportSingleView } from './views/reports/single';
 import { gql, useQuery } from '@apollo/client';
 import { ReportProvider } from './context';
+import { ReportViewer } from './views/report-viewer';
 
 export const App = () => {
 
@@ -89,15 +90,16 @@ export const App = () => {
 
     return (
         <ReportProvider value={{gatewaySchema}}>
-        <Box flex direction='row'>
+        <Box sx={{display: 'flex', height: '100%', color: 'white'}}>
             <Sidebar
                 onSelect={(item) => navigate(item.path)}
                 menu={menu}
                 />
-            <Box background={'neutral-1'} flex pad="xsmall">
+            <Box sx={{display: 'flex', bgcolor: 'primary.dark', flex: 1}}>
                 <Routes>
                     <Route path={""} element={<Outlet />}>
                         <Route path={""} element={<Dashboard />} />
+                        <Route path={'view/:id'} element={<ReportViewer />} />
                         <Route path={'reports'} element={<Outlet />}>
                             <Route path={''} element={<ReportListView />} />
                             <Route path={':id/*'} element={<ReportSingleView />} />

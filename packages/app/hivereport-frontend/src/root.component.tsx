@@ -1,8 +1,8 @@
 import { BrowserRouter as Router } from 'react-router-dom';
-import { Grommet } from 'grommet'
-import { BaseStyle } from '@hexhive/styles'
+import { HexHiveTheme } from '@hexhive/styles'
 import {App} from './App';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import { ThemeProvider } from '@mui/material';
 
 const API_URL = localStorage.getItem('HEXHIVE_API');
 
@@ -18,12 +18,9 @@ const client = new ApolloClient({
 export default function Root(props) {
   return <Router basename={process.env.PUBLIC_URL}>
     <ApolloProvider client={client}>
-      <Grommet 
-        full
-        style={{flex: 1, display: 'flex'}}
-        theme={BaseStyle}>
+      <ThemeProvider theme={HexHiveTheme}>
         <App />
-      </Grommet>
+      </ThemeProvider>
     </ApolloProvider>
     </Router>;
 }

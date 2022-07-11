@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Text } from 'grommet';
-import { Add } from '@mui/icons-material'
-import { IconButton, Divider } from '@mui/material'
+import { Add, Fullscreen } from '@mui/icons-material'
+import { IconButton, Box, Divider, Typography } from '@mui/material'
 import { GraphGrid } from '@hexhive/ui'
 import { SelectReportModal } from '../../components/modals/select-report';
 import { gql, useApolloClient, useMutation, useQuery } from '@apollo/client';
 import { DashboardHeader } from './header';
 import { DashboardModal } from '../../components/modals/dashboard';
 import { ReportCard } from '../../components/report-card';
+import { EstimateReport } from '../../reports/estimates';
+import { WorkInProgressReport } from '../../reports/work-in-progress';
+import { useNavigate } from 'react-router-dom';
+import { ReportLayout } from '../../reports';
 
 export const Dashboard = (props) => {
 
@@ -18,31 +21,34 @@ export const Dashboard = (props) => {
 
     const [ activeLayout, setActiveLayout ] = useState<any[]>([])
 
-    const { data } = useQuery(gql`
-        query GetDashboard {
-            reports {
-                id
-                name
-            }
-            reportDashboards {
-                id
-                name
+    const navigate = useNavigate()
 
-                reports {
-                    id
-                    x
-                    y
-                    width
-                    height
 
-                    report {
-                        name
-                        type
-                    }
-                }
-            }
-        }
-    `)
+    // const { data } = useQuery(gql`
+    //     query GetDashboard {
+    //         reports {
+    //             id
+    //             name
+    //         }
+    //         reportDashboards {
+    //             id
+    //             name
+
+    //             reports {
+    //                 id
+    //                 x
+    //                 y
+    //                 width
+    //                 height
+
+    //                 report {
+    //                     name
+    //                     type
+    //                 }
+    //             }
+    //         }
+    //     }
+    // `)
 
     const client = useApolloClient()
 
@@ -74,21 +80,21 @@ export const Dashboard = (props) => {
         client.refetchQueries({include: ['GetDashboard']})
     }
 
-    const dashboards = data?.reportDashboards || [];
+    // const dashboards = data?.reportDashboards || [];
 
-    const reports = data?.reports || []
+    // const reports = data?.reports || []
 
 
-    useEffect(() => {
-        const layout = dashboards?.find((a) => a.id == activeDashboard?.id)?.reports || []
-        setActiveLayout(layout?.map((x) => ({...x, w: x.width, h: x.height})))
-    }, [activeDashboard?.id])
+    // useEffect(() => {
+    //     const layout = dashboards?.find((a) => a.id == activeDashboard?.id)?.reports || []
+    //     setActiveLayout(layout?.map((x) => ({...x, w: x.width, h: x.height})))
+    // }, [activeDashboard?.id])
 
     console.log({activeLayout})
 
     return (
-        <Box flex>
-            <SelectReportModal 
+        <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
+            {/* <SelectReportModal 
                 reports={reports}
                 open={selectReportOpen}
                 onSubmit={(report) => {
@@ -100,7 +106,7 @@ export const Dashboard = (props) => {
                 onClose={() => {
                     openSelectReport(false)
                 }}
-                />
+                /> */}
             <DashboardModal 
                 open={createOpen}
                 onSubmit={(dashboard) => {
@@ -115,16 +121,17 @@ export const Dashboard = (props) => {
                 />
             <DashboardHeader
                 view={activeDashboard}
-                views={dashboards}
+                views={[]}
                 onViewChange={(view) => setActiveDashboard(view)}
                 onAdd={() => openSelectReport(true)}
                 onCreateView={() => openCreate(true)}
                 />
             <Divider />
 
-            <Box flex overflow={'auto'}>
+            <Box sx={{flex: 1, display: 'flex', overflow: 'auto'}}>
                 <GraphGrid 
                     noWrap
+                    editable={false}
                     onLayoutChange={(grid) => {
 
                         updateDashboardGrid({
@@ -146,9 +153,20 @@ export const Dashboard = (props) => {
                         // //   setActiveLayout(grid)
                         // }
                     }}
-                    layout={activeLayout || []}>
+                    layout={ReportLayout.map((x) => ({...x, static: true})) || []}>
                     {(item) => (
-                        <ReportCard {...item.report} />
+                        <Box sx={{display: 'flex', borderRadius: '6px', bgcolor: 'secondary.main', flex: 1, flexDirection: 'column'}}>
+                            <Box sx={{padding: '6px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                                <Typography>{item.label}</Typography>
+                                <IconButton 
+                                    onClick={() => navigate(`/view/${item.id}`)}
+                                    sx={{color: 'white'}} size="small">
+                                    <Fullscreen fontSize="inherit" />
+                                </IconButton>
+                            </Box>
+                            {item.element}
+                        </Box>
+                        // <ReportCard {...item.report} />
                     )}
                 </GraphGrid>
             </Box>

@@ -8,6 +8,7 @@ import {Deployment} from './src/deployment'
 import {Service} from './src/service'
 
 const main = (async () => {
+
     const config = new Config();
     const org = config.require('org');
 
@@ -25,15 +26,15 @@ const main = (async () => {
 
     const provider = new Provider('eks', { kubeconfig });
 
-    const deployment = await rootServer.apply(async (url) => await Deployment(provider, url, dbUrl, dbPass));
-    const service = await Service(provider)
+    // const deployment = await rootServer.apply(async (url) => await Deployment(provider, url, dbUrl, dbPass));
+    // const service = await Service(provider)
 
     return {
-        service,
-        deployment
+        // service,
+        // deployment
     }
 })()
 
-export const deployment = main.then((res) => res.deployment.metadata.name)
+// export const deployment = main.then((res) => res.deployment.metadata.name)
 
-export const service = main.then((res) => res.service.metadata.name)
+// export const service = main.then((res) => res.service.metadata.name)

@@ -5,7 +5,6 @@ import { Add, ChevronRight, ExpandMore } from '@mui/icons-material';
 import { CustomTreeItem, MenuItem, MenuItemGroup } from './item';
 import { TreeViewProvider } from './context';
 import { Box, IconButton, Typography } from '@mui/material';
-import { BaseStyle } from '@hexhive/styles';
 
 export interface TreeMenuProps {
     onNodeSelect?: (nodeId: string) => void;
