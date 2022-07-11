@@ -189,12 +189,12 @@ export const EstimateReport = () => {
                             {Object.keys(weeks[start]).map((x) => {
                                 let item = weeks[start][x]
                                 return (
-                                <Box sx={{alignItems:"center", display: 'flex', flexDirection:"row", justifyContent:"between"}}>
+                                <Box sx={{alignItems:"center", display: 'flex', flexDirection:"row", justifyContent:"space-between"}}>
                                         <Box sx={{display: 'flex', alignItems: 'center'}} >
                                             <ColorDot color={StatusTypes[x || '']} size={10}/>
-                                            <Typography>{((item / value )* 100).toFixed(2)}% - {x}</Typography>
+                                            <Typography fontSize="small">{((item / value )* 100).toFixed(2)}% - {x}</Typography>
                                         </Box>
-                                    <Typography sx={{marginLeft: '3px'}}>{formatter.format(item)}</Typography>
+                                    <Typography fontSize="small" sx={{marginLeft: '3px'}}>{formatter.format(item)}</Typography>
                                 </Box>
                                 )
                             }
