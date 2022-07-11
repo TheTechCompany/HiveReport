@@ -1,8 +1,9 @@
 import { gql, useQuery } from "@apollo/client";
 import { Timeline, ColorDot } from "@hexhive/ui";
-import { Paper, Box, Typography } from "@mui/material";
+import { FilterList } from '@mui/icons-material'
+import { Paper, Box, Typography, IconButton, Menu, MenuItem, Checkbox } from "@mui/material";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { stringToColor } from '@hexhive/utils';
 
 var formatter = new Intl.NumberFormat('en-US', {
@@ -27,6 +28,9 @@ const StatusTypes : any = {
 
 export const EstimateReport = () => {
 
+    const filterButton = useRef<any>();
+    const [ filterOpen, openFilter ] = useState(false);
+
     const [ timeline, setTimeline ] = useState([]);
 
     const [horizon, setHorizon] = useState<{ start: Date, end: Date } | undefined>()
@@ -49,7 +53,7 @@ export const EstimateReport = () => {
 
     const quotes = data?.estimates || [];
 
-    const filter = [];
+    const [filter, setFilter] = useState(Object.keys(StatusTypes));
 
 
 
@@ -213,6 +217,32 @@ export const EstimateReport = () => {
                 onHorizonChange={(start, end) => setHorizon({start, end})}
                 data={timeline || []}
                 />
+            <Menu 
+                onClose={() => openFilter(false)}
+                anchorOrigin={{vertical: 'top', horizontal: 'right'}}
+                transformOrigin={{vertical: 'bottom', horizontal: 'right'}}
+                open={filterOpen} 
+                anchorEl={() => filterButton.current}>
+                {Object.keys(StatusTypes).map((status) => (
+                    <MenuItem dense onClick={() => {
+                        let f = filter.slice();
+                        if(f.indexOf(status) > -1) {
+                            f.splice(f.indexOf(status), 1)
+                        }else{
+                            f.push(status);
+                        }
+                        setFilter(f)
+                    }}>
+                        <Checkbox size="small" checked={filter.indexOf(status) > -1} />
+                        <Typography>{status}</Typography>
+                    </MenuItem>
+                ))}
+            </Menu>
+            <IconButton 
+                onClick={() => openFilter(!filterOpen)}
+                ref={filterButton} sx={{bgcolor: 'primary.main', position: 'absolute', right: 6, zIndex: 99, bottom: 6}}>
+                <FilterList />
+            </IconButton>
         </Paper>
     )
 }
