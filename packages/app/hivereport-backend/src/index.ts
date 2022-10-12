@@ -9,6 +9,7 @@ import schema from './schema';
 const app = express();
 
 (async () => {
+    
 
     const prisma = new PrismaClient();
 
